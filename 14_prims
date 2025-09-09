@@ -84,16 +84,33 @@ void tester() {
 
 // Plotter function
 void plotter() {
-    FILE *f = fopen("prims.txt", "w");
-    for (int t = 0; t < 5; t++) {
+    FILE *fp = fopen("prims.txt", "w");
+    srand(time(0));
+    int adjMat[100][100];
+
+    for (int k = 5; k <= 50; k += 5) {   // test graph sizes
+        n = k;
+
+        // build random adjacency matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) adjMat[i][j] = 0;
+                else if (rand() % 4 == 0) adjMat[i][j] = INT_MAX;
+                else adjMat[i][j] = rand() % 20 + 1;
+            }
+        }
+
         heapCount = 0;
         graphCount = 0;
-        tester(); // interactive input each time
-        fprintf(f, "%d\t%d\n", n, (graphCount > heapCount) ? graphCount : heapCount);
+
+        int cost = prims(n, adjMat);
+        fprintf(fp, "%d\t%d\n", n, (graphCount > heapCount ? graphCount : heapCount));
     }
-    fclose(f);
-    printf("\nResults written to prims.txt\n");
+
+    fclose(fp);
+    printf("Prim's results written to prims.txt\n");
 }
+
 
 // Main menu
 int main() {
