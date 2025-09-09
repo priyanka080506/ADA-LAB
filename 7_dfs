@@ -87,36 +87,19 @@ void tester()
     }
 }
 
-
-
-    void plotter() {
-    FILE *fp = fopen("dijkstra.txt", "w");
-    srand(time(0));
-    int adjMat[100][100], dist[100];
-
-    for (int k = 5; k <= 50; k += 5) {   // test graph sizes 5,10,…50
-        n = k;
-
-        // build random adjacency matrix
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j) adjMat[i][j] = 0;
-                else if (rand() % 4 == 0) adjMat[i][j] = INT_MAX; // 25% no edge
-                else adjMat[i][j] = rand() % 20 + 1;              // weight 1–20
-            }
-        }
-
-        heapCount = 0;
-        graphCount = 0;
-
-        dikstras(n, adjMat, 0, dist);   // always source=0
-        fprintf(fp, "%d\t%d\n", n, (graphCount > heapCount ? graphCount : heapCount));
-    }
-
-    fclose(fp);
-    printf("Dijkstra results written to dijkstra.txt\n");
-}
-
+   void plotter(){
+    int count=0;
+    FILE *fp=fopen("dfs.txt","w");
+    int mat[100][100];
+    for(int k=1;k<=10;k++){
+        n=k;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(i!=j){
+                    mat[i][j]=1;
+                }else{
+                    mat[i][j]=0;
+                }
 
 
 void main()
