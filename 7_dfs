@@ -87,7 +87,7 @@ void tester()
     }
 }
 
-   void plotter(){
+  void plotter(){
     int count=0;
     FILE *fp=fopen("dfs.txt","w");
     int mat[100][100];
@@ -100,7 +100,13 @@ void tester()
                 }else{
                     mat[i][j]=0;
                 }
-
+            }
+        }
+        opcount=0;
+        checkGraph(mat,0);
+        count=opcount;
+        fprintf(fp,"%d\t%d\n",k,count);
+    }
 
 void main()
 {
