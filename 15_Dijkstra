@@ -20,7 +20,7 @@ int minDistance(int dist[], int visited[]) {
     return minIndex;
 }
 
-void dijkstra(int graph[MAX][MAX], int source, int dist[]) {
+void dijkstra(int n, int graph[MAX][MAX], int source, int dist[]) {
     int visited[MAX];
     for (int i = 0; i < n; i++) {
         dist[i] = INT_MAX;
@@ -67,7 +67,7 @@ void tester() {
     heapCount = 0;
     graphCount = 0;
 
-    dijkstra(graph, source, dist);
+    dijkstra(n,graph, source, dist);
 
     printf("\nShortest distances from %d:\n", source);
     for (int i = 0; i < n; i++) {
