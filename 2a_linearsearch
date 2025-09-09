@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int count=0;
+int Linear_search(int arr[],int n,int key){
+    count=0;
+    for(int i=0;i<n;i++ ){
+        count++;
+        if(arr[i]==key){
+            return i;
+        }
+    }
+    return -1;
+
+}
+
+void tester(){
+  int n;
+  int key;
+  printf("Enter the value of the n\n");
+  scanf("%d",&n);
+  int arr[n];
+  printf("Enter the elements of the array\n");
+  for(int i=0;i<n;i++){
+    scanf("%d",&arr[i]);
+  }
+  printf("Enter the key\n");
+  scanf("%d",&key);
+  int ans;
+  ans=Linear_search(arr,n,key);
+  if(ans!=-1){
+    printf("The key %d found \n",key);
+  }else{
+    printf("The key not found\n");
+  }
+}
+
+void plotter(){
+    int *arr;
+    int key;
+  int count1=0,count2=0,count3=0;
+  FILE *fp1;
+  FILE *fp2;
+  fp1=fopen("Numbers.txt","w");
+  fp2=fopen("Count.txt","w");
+  for(int k=10;k<=100;k+=10){
+    arr=(int *)malloc(k*sizeof(int));
+
+   
+   
+    for(int i=0;i<k;i++){
+        arr[i]=rand()%100;
+        fprintf(fp1,"%d ",arr[i]);
+    }
+    fprintf(fp1,"\n");
+    //Best Case
+     key=arr[0];
+    Linear_search(arr,k,key);
+    count1=count;
+    
+    //Average Case
+    key=arr[k/2];
+    Linear_search(arr,k,key);
+    count2=count;
+
+    //Worst Case
+    key=5555;
+    Linear_search(arr,k,key);
+    count3=count;
+
+    fprintf(fp2,"%d %d %d %d\n",k,count1,count2,count3);
+    
+    
+
+
+  }
+}
+
+void main(){
+    int ch;
+    
+    printf("\n1. tester\n2. plotter\n");
+    printf("Enter your choice\n");
+    scanf("%d",&ch);
+    switch(ch){
+        case 1:
+        tester();
+        break;\
+
+        case 2:
+        plotter();
+        break;
+
+        default:
+        printf("Invalid choice!!");
+    }
+    
+}
