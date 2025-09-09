@@ -1,0 +1,111 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 100
+
+int n;
+int heapCount = 0, graphCount = 0;
+
+// Function to find vertex with minimum key value
+int minKey(int key[], int mstSet[]) {
+    int min = INT_MAX, minIndex = -1;
+    for (int v = 0; v < n; v++) {
+        heapCount++; // count comparisons like heap operations
+        if (!mstSet[v] && key[v] < min) {
+            min = key[v];
+            minIndex = v;
+        }
+    }
+    return minIndex;
+}
+
+// Prim’s algorithm
+int prims(int graph[MAX][MAX]) {
+    int parent[MAX]; // store MST edges
+    int key[MAX];    // minimum weight edge for each vertex
+    int mstSet[MAX]; // visited array
+
+    for (int i = 0; i < n; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = 0;
+    }
+
+    key[0] = 0;      // start from node 0
+    parent[0] = -1;  // root has no parent
+
+    int totalCost = 0;
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = minKey(key, mstSet);
+        mstSet[u] = 1;
+        totalCost += key[u];
+
+        // Update adjacent vertices
+        for (int v = 0; v < n; v++) {
+            graphCount++;
+            if (graph[u][v] != INT_MAX && !mstSet[v] && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    printf("\nMST edges are:\n");
+    for (int i = 1; i < n; i++) {
+        printf("%d -- %d\n", parent[i], i);
+    }
+
+    return totalCost;
+}
+
+// Tester function
+void tester() {
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    int graph[MAX][MAX];
+    printf("Enter adjacency matrix (-1 for no edge):\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+            if (graph[i][j] == -1)
+                graph[i][j] = INT_MAX; // treat -1 as infinity
+        }
+    }
+
+    heapCount = 0;
+    graphCount = 0;
+
+    int cost = prims(graph);
+
+    printf("\nMinimum cost of MST: %d\n", cost);
+    printf("HeapCount = %d, GraphCount = %d\n", heapCount, graphCount);
+}
+
+// Plotter function
+void plotter() {
+    FILE *f = fopen("prims.txt", "w");
+    for (int t = 0; t < 5; t++) {
+        heapCount = 0;
+        graphCount = 0;
+        tester(); // interactive input each time
+        fprintf(f, "%d\t%d\n", n, (graphCount > heapCount) ? graphCount : heapCount);
+    }
+    fclose(f);
+    printf("\nResults written to prims.txt\n");
+}
+
+// Main menu
+int main() {
+    int ch;
+    printf("\nEnter:\n1. Tester\n2. Plotter\nChoice: ");
+    scanf("%d", &ch);
+
+    switch (ch) {
+        case 1: tester(); break;
+        case 2: plotter(); break;
+        default: printf("Invalid input!\n");
+    }
+
+    return 0;
+}
