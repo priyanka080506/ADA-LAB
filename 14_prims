@@ -21,8 +21,8 @@ int minKey(int key[], int mstSet[]) {
 
 // Prim’s algorithm
 int prims(int graph[MAX][MAX]) {
-    int parent[MAX]; // store MST edges
-    int key[MAX];    // minimum weight edge for each vertex
+    int parent[MAX]; 
+    int key[MAX];    
     int mstSet[MAX]; // visited array
 
     for (int i = 0; i < n; i++) {
@@ -30,7 +30,7 @@ int prims(int graph[MAX][MAX]) {
         mstSet[i] = 0;
     }
 
-    key[0] = 0;      // start from node 0
+    key[0] = 0;      
     parent[0] = -1;  // root has no parent
 
     int totalCost = 0;
@@ -86,24 +86,24 @@ void tester() {
 void plotter() {
     FILE *fp = fopen("prims.txt", "w");
     srand(time(0));
-    int adjMat[100][100];
+    int graph[100][100];
 
-    for (int k = 5; k <= 50; k += 5) {   // test graph sizes
+    for (int k = 5; k <= 50; k += 5) {   
         n = k;
 
-        // build random adjacency matrix
+        
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (i == j) adjMat[i][j] = 0;
-                else if (rand() % 4 == 0) adjMat[i][j] = INT_MAX;
-                else adjMat[i][j] = rand() % 20 + 1;
+                if (i == j) graph[i][j] = 0;
+                else if (rand() % 4 == 0) graph[i][j] = INT_MAX;
+                else graph[i][j] = rand() % 20 + 1;
             }
         }
 
         heapCount = 0;
         graphCount = 0;
 
-        int cost = prims(n, adjMat);
+        int cost = prims(graph);
         fprintf(fp, "%d\t%d\n", n, (graphCount > heapCount ? graphCount : heapCount));
     }
 
