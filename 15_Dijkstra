@@ -3,11 +3,11 @@
 
 #define MAX 100
 
-int n;                 // number of nodes
-int heapCount = 0;     // count heap operations (for plotter)
-int graphCount = 0;    // count graph relaxations (for plotter)
+int n;                 
+int heapCount = 0;     
+int graphCount = 0;    
 
-// ---------- Dijkstra without complicated heap ----------
+// - Dijkstra  -
 int minDistance(int dist[], int visited[]) {
     int min = INT_MAX, minIndex = -1;
     for (int v = 0; v < n; v++) {
@@ -45,7 +45,7 @@ void dijkstra(int n, int graph[MAX][MAX], int source, int dist[]) {
     }
 }
 
-// ---------- Tester ----------
+// - Tester -
 void tester() {
     int graph[MAX][MAX], dist[MAX], source;
 
@@ -78,28 +78,28 @@ void tester() {
     printf("\nHeapCount = %d, GraphCount = %d\n", heapCount, graphCount);
 }
 
-// ---------- Plotter ----------
+// - Plotter -
 void plotter() {
     FILE *fp = fopen("dijkstra.txt", "w");
     srand(time(0));
-    int adjMat[100][100], dist[100];
+    int graph[100][100], dist[100];
 
-    for (int k = 5; k <= 50; k += 5) {   // test graph sizes 5,10,…50
+    for (int k = 5; k <= 50; k += 5) {    
         n = k;
 
         // build random adjacency matrix
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (i == j) adjMat[i][j] = 0;
-                else if (rand() % 4 == 0) adjMat[i][j] = INT_MAX; // 25% no edge
-                else adjMat[i][j] = rand() % 20 + 1;              // weight 1–20
+                if (i == j) graph[i][j] = 0;
+                else if (rand() % 4 == 0) graph[i][j] = INT_MAX; 
+                else graph[i][j] = rand() % 20 + 1;              
             }
         }
 
         heapCount = 0;
         graphCount = 0;
 
-        dikstras(n, adjMat, 0, dist);   // always source=0
+        dikstras(n, graph, 0, dist);   
         fprintf(fp, "%d\t%d\n", n, (graphCount > heapCount ? graphCount : heapCount));
     }
 
@@ -108,7 +108,7 @@ void plotter() {
 }
 
 
-// ---------- Main ----------
+// - Main -
 int main() {
     int ch;
     printf("\nEnter\n1. Tester\n2. Plotter\nChoice: ");
