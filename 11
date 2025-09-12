@@ -2,123 +2,146 @@
 #include <stdlib.h>
 #include <time.h>
 
-int count1 = 0, count2;
-
-void heapify(int *arr, int i, int size)
+int count = 0;
+void heapify(int arr[], int n)
 {
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-    int maxIdx = i;
-
-    if (left < size && ++count1 && arr[left] > arr[maxIdx])
+    
+    int parent, child, p;
+    int heap = 0;
+    for (int i = n / 2; i >= 1; i--)
     {
-        maxIdx = left;
-    }
-
-    if (right < size && ++count1 && arr[right] > arr[maxIdx])
-    {
-        maxIdx = right;
-    }
-
-    if (maxIdx != i)
-    {
-        int temp = arr[i];
-        arr[i] = arr[maxIdx];
-        arr[maxIdx] = temp;
-
-        heapify(arr, maxIdx, size);
+        parent = i;
+        p = arr[parent];
+        heap = 0;
+        while (!heap && (2 * parent) <= n)
+        {
+            child = 2 * parent;
+            if (child  < n)
+            {
+                count++;
+                if (arr[child + 1] > arr[child])
+                {
+                    child = child + 1;
+                }
+            }
+            count++;
+            if (p >= arr[child])
+            {
+                heap = 1;
+            }
+            else
+            {
+                arr[parent] = arr[child];
+                parent = child;
+            }
+        }
+        arr[parent] = p;
     }
 }
 
-void heapSort(int *arr, int n)
+void heap_del(int h[], int n)
 {
-    for (int i = (n / 2) - 1; i >= 0; i--)
+
+    heapify(h, n);
+
+    for (int i = n; i >= 1; i--)
     {
-        heapify(arr, i, n);
-    }
-
-    count2 = count1;
-    count1 = 0;
-
-    for (int i = n - 1; i >= 0; i--)
-    {
-        int temp = arr[0];
-        arr[0] = arr[i];
-        arr[i] = temp;
-
-        heapify(arr, 0, i);
+        int temp = h[1];
+        h[1] = h[i];
+        h[i] = temp;
+        heapify(h, i - 1);
     }
 }
-
 void tester()
 {
     int n;
-    printf("Enter array size : ");
+    printf("Enter the number of elements\n");
     scanf("%d", &n);
     int arr[n];
-    printf("Enter %d elements :\n", n);
-    for (int i = 0; i < n; i++)
-        scanf("%d", &arr[i]);
-
-    heapSort(&arr[0], n);
-    printf("Sorted array :\n");
-    for (int i = 0; i < n; i++)
-        printf("%d\t", arr[i]);
-}
-
-void plotter()
-{
-    srand(time(NULL));
-    FILE *f1, *f2, *f3;
-    f1 = fopen("heapBest.txt", "w");
-    f2 = fopen("heapWorst.txt", "w");
-    f3 = fopen("heapAvg.txt", "w");
-
-    int n = 100;
-
-    while (n <= 1000)
+    printf("Enter the elements of the array\n");
+    for (int i = 1; i <= n; i++)
     {
-        int arr[n];
-
-        for (int i = 0; i < n; i++)
-            arr[i] = n - i + 1;
-        count1 = 0;
-        heapSort(arr, n);
-        fprintf(f1, "%d\t%d\n", n, count1 > count2 ? count1 : count2);
-
-        for (int i = 0; i < n; i++)
-            arr[i] = i + 1;
-        count1 = 0;
-        heapSort(arr, n);
-        fprintf(f2, "%d\t%d\n", n, count1 > count2 ? count1 : count2);
-
-        for (int i = 0; i < n; i++)
-            arr[i] = rand() % n;
-        count1 = 0;
-        heapSort(arr, n);
-        fprintf(f3, "%d\t%d\n", n, count1 > count2 ? count1 : count2);
-
-        n += 100;
+        scanf("%d", &arr[i]);
     }
-    fclose(f1);
-    fclose(f2);
-    fclose(f3);
+
+    heap_del(arr, n);
+    printf("The sorted order is\n");
+    for (int i = 1; i <= n; i++)
+    {
+        printf("%d\t", arr[i]);
+    }
 }
 
-void main()
+void plotter(){
+    int *arr;
+    FILE *fp1;
+    FILE *fp2;
+    int count1=0,count2=0,count3=0;
+    fp1=fopen("heap_number.txt","w");
+    fp2=fopen("heap_count.txt","w");
+
+    for(int k=10;k<=100;k+=10){
+        arr=(int *)malloc((k+1)*sizeof(int));
+
+        //Best case
+        count=0;
+        arr[1]=rand()%1000;
+        fprintf(fp1,"%d ",arr[0]);
+        for(int i=2;i<=k;i++){
+            arr[i]=arr[i-1]+2;
+            fprintf(fp1,"%d ",arr[i]);
+        }
+        fprintf(fp1,"\n");
+        heap_del(arr,k);
+        count1=count;
+
+
+         //Avearge case 
+         count=0;
+         for(int i=1;i<=k;i++){
+            arr[i]=rand()%100;
+            fprintf(fp1,"%d ",arr[i]);
+        }
+        fprintf(fp1,"\n");
+        heap_del(arr,k);
+        count2=count;
+
+        //worst case 
+        count=0;
+         
+        arr[1]=rand()%100;
+        fprintf(fp1,"%d ",arr[0]);
+        for(int i=2;i<=k;i++){
+            arr[i]=arr[i-1]+2;
+            fprintf(fp1,"%d ",arr[i]);
+        }
+        fprintf(fp1,"\n");
+        heap_del(arr,k);
+        count3=count;
+
+        fprintf(fp2,"%d %d %d %d\n",k,count1,count2,count3);
+
+
+
+    }
+}
+
+int main()
 {
     int ch;
-    printf("Enter\n1.Tester\n2.Plotter\n");
+    printf("Enter your choice:\n1. Tester\n 2. Plotter\n");
     scanf("%d", &ch);
     switch (ch)
     {
     case 1:
         tester();
         break;
-    case 2:
+
+        case 2:
         plotter();
         break;
     default:
-        printf("Invalid choice!");
+        printf("Invalid choice!!\n");
     }
+    return 0;
 }
