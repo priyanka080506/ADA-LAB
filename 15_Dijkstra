@@ -46,10 +46,10 @@ void dijkstra(int n, int graph[MAX][MAX], int source, int dist[]) {
 }
 
 // - Tester -
-void tester() {
+int tester() {
     int graph[MAX][MAX], dist[MAX], source;
 
-    printf("Enter number of nodes: ");
+    printf("Enter number of nodes : ");
     scanf("%d", &n);
 
     printf("Enter adjacency matrix (-1 for no edge):\n");
@@ -61,9 +61,13 @@ void tester() {
         }
     }
 
-    printf("Enter source vertex: ");
+    printf("Enter source vertex from 0 to %d: ",n-1);
     scanf("%d", &source);
-
+    if (source<0||source>=n)
+{
+printf("Invalid source\n");
+return;
+}
     heapCount = 0;
     graphCount = 0;
 
