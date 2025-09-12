@@ -1,91 +1,98 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <time.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<limits.h>
 
-int n, opcount, dist[100][100];
+int n;
+int opcount = 0;
+int dist[100][100];
 
-int floyds(int adjMat[n][n], int n)
-{
+void floyds(int adj[n][n], int n) {
     opcount = 0;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            if (adjMat[i][j] == -1)
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            if(adj[i][j] == -1)
                 dist[i][j] = INT_MAX;
             else
-                dist[i][j] = adjMat[i][j];
-    for (int k = 0; k < n; k++)
-        for (int i = 0; i < n; i++)
-        {
-            int tempDist = dist[i][k];
-            for (int j = 0; j < n; j++)
-            {
-                if (dist[i][j] > tempDist)
-                {
-                    opcount++;
-                    if (dist[k][j] != INT_MAX && dist[i][j] > tempDist + dist[k][j])
-                    {
-                        dist[i][j] = tempDist + dist[k][j];
-                    }
+                dist[i][j] = adj[i][j];
+        }
+    }
+
+    for(int k=0; k<n; k++) {
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                opcount++;
+                 if(dist[i][k] != INT_MAX && dist[k][j] != INT_MAX &&
+                   dist[i][j] > dist[i][k] + dist[k][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
                 }
             }
         }
+
+        printf("\nMatrix after including node %d as intermediate:\n", k);
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                if(dist[i][j] == INT_MAX)
+                    printf("INF\t");
+                else
+                    printf("%d\t", dist[i][j]);
+            }
+            printf("\n");
+        }
+    }
 }
 
-void tester()
-{
+void tester() {
+    int adj[100][100];
     printf("Enter the number of nodes: ");
     scanf("%d", &n);
-    int adjMat[n][n];
-    printf("Enter adjacency matrix: \n");
-    printf("[Note: Enter -1 to indicate infinity]\n");
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            scanf("%d", &adjMat[i][j]);
-    floyds(adjMat, n);
-    printf("Shortest distance between all pair of nodes:\n");
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            printf("%d\t", dist[i][j]);
-        printf("\n");
+    printf("Enter the adjacency matrix (-1 for no edge):\n");
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            scanf("%d", &adj[i][j]);
+        }
     }
+    floyds(adj, n);
 }
 
-void plotter()
-{
+void plotter(){
+int adj[100][100];
+    FILE *fp=fopen("Floyds.txt","w");
     srand(time(NULL));
-    FILE *fp = fopen("floydes.txt", "w");
-    for (int k = 2; k < 12; k++)
-    {
-        n = k;
-        int adjMat[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                if (i != j)
-                    adjMat[i][j] = rand();
-                else
-                    adjMat[i][j] = 0;
-        floyds(adjMat, n);
-        fprintf(fp, "%d\t%d\n", n, opcount);
+    for(int k=1;k<=10;k++){
+         n=k;
+         for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+           
+            if(i!=j){
+                adj[i][j]=rand()%10;
+            }else{
+                adj[i][j]=0;
+            }
+
+        }
     }
-    fclose(fp);
+    floyds(adj,k);
+    fprintf(fp,"%d %d\n",k,opcount);
+
+    }
+   
 }
 
-void main()
-{
+int main() {
     int ch;
-    printf("Enter\n1.Tester\n2.Plotter\n");
+    printf("Enter your choice:\n1. Tester\n 2. Plotter\n");
     scanf("%d", &ch);
-    switch (ch)
-    {
-    case 1:
-        tester();
-        break;
-    case 2:
-        plotter();
-        break;
-    default:
-        printf("Invalid choice!! ");
+    switch(ch) {
+        case 1:
+            tester();
+            break;
+
+            case 2:
+            plotter();
+            break;
+        default:
+            printf("Invalid choice!!\n");
     }
+    return 0;
 }
