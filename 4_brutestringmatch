@@ -1,106 +1,94 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
-#include <stdbool.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
 
-int count = 0;
-bool stringmatching(char *text, char *pattern, int n, int m)
-{
-    count = 0;
-    for (int i = 0; i <= (n - m); i++)
-    {
-        int j = 0;
-        while (j < m)
-        {
+int count=0;
+int string_match(char t[],char p[]){
+    count=0;
+    int n=strlen(t);
+    int m=strlen(p);
+    for(int i=0;i<=n-m;i++){
+        int j=0;
+        while(j<m){
             count++;
-            if (pattern[j] != text[i + j])
+            if(p[j]!=t[i+j]){
                 break;
-            j++;
+               
+            }
+             j++;
         }
-        if (j == m)
-            return true;
+    
+        if(j==m){
+            return i;
+        }
+        
     }
-    return false;
+    return -1;
+
+
 }
+void tester(){
+    char t[100],p[50];
+    printf("Enter the text\n");
+    scanf("%s",t);
+    printf("Enter the pattern\n");
+    scanf("%s",p);
+    int ans;
+    ans=string_match(t,p);
+   printf("%d",ans);
 
-void plotter()
-{
-    FILE *f1 = fopen("strbest.txt", "w");
-    FILE *f2 = fopen("strworst.txt", "w");
-    FILE *f3 = fopen("stravg.txt", "w");
-    char *text = (char *)malloc(1000 * sizeof(char));
-    char *pattern;
-    for (int i = 0; i < 1000; i++)
-        *(text + i) = 'a';
-    int m, n;
-    n = 1000;
-    m = 10;
-    while (m <= 1000)
-    {
-        pattern = (char *)malloc(m * sizeof(char));
-        count = 0;
-        for (int i = 0; i < m; i++) // best case
-            pattern[i] = 'a';
-        stringmatching(text, pattern, n, m);
-        fprintf(f1, "%d\t%d\n", m, count);
-
-        count = 0;
-        pattern[m - 1] = 'b'; // worst case
-        stringmatching(text, pattern, n, m);
-        fprintf(f2, "%d\t%d\n", m, count);
-
-        count = 0;
-        for (int i = 0; i < m; i++) // avg case
-            pattern[i] = 97 + rand() % 3;
-        stringmatching(text, pattern, n, m);
-        fprintf(f3, "%d\t%d\n", m, count);
-        free(pattern);
-        if (m < 100)
-            m = m + 10;
-        else
-            m = m + 100;
-    }
+    
 }
+void plotter(){
+    srand(time(NULL));
+    char t[200],p[100];
+    FILE *fp1;
+    FILE *fp2;
+    int count1=0,count2=0,count3=0;
+    fp1=fopen("Str_Number.txt","w");
+    fp2=fopen("str_count.txt","w");
+    for(int k=10;k<=100;k+=10){
+        for(int i=0;i<k;i++){
+            t[i]='a';
+            fprintf(fp1,"%c ",t[i]);
+        }
+        t[k] = '\0'; 
+        fprintf(fp1,"\n");
 
-void tester()
-{
-    int m, n;
-    char text[100], pattern[100];
-    printf("Enter the pattern length: ");
-    scanf("%d", &m);
-    printf("Enter the pattern: ");
-    getchar();
-    fgets(pattern, sizeof(pattern), stdin);
-    pattern[strcspn(pattern, "\n")] = '\0';
-    printf("Enter the text length: ");
-    scanf("%d", &n);
-    printf("Enter the text: ");
-    getchar();
-    fgets(text, sizeof(text), stdin);
-    pattern[strcspn(text, "\n")] = '\0';
-    bool comparisons = stringmatching(text, pattern, n, m);
-     if (comparisons) {
-        printf("\nPattern '%s' matched with Text '%s'\n", pattern, text);
-    } else {
-        printf("\nPattern '%s' doesn't match with the Text '%s'\n", pattern, text);
+        //Best case 
+        string_match(t,"aaa");
+        count1=count;
+
+        //Avearge case
+        string_match(t,"aba");
+        count2=count;
+
+        //Worst case
+        string_match(t,"aab");
+        count3=count;
+
+        fprintf(fp2,"%d %d %d %d\n",k,count1,count2,count3);
+
+
+      
     }
 }
 
-void main()
-{
+int main() {
     int ch;
-    printf("Enter \n1.Tester\n2.Plotter\n");
+    printf("Enter your choice:\n1. Tester\n 2. Plotter\n");
     scanf("%d", &ch);
-    switch (ch)
-    {
-    case 1:
-        tester();
-        break;
-    case 2:
-        plotter();
-        break;
-    default:
-        printf("Invalid choice.\n");
+    switch(ch) {
+        case 1:
+            tester();
+            break;
+
+            case 2:
+            plotter();
+            break;
+        default:
+            printf("Invalid choice!!\n");
     }
+    return 0;
 }
