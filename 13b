@@ -15,7 +15,7 @@ int knapsackMemo(int n, int W)
         return dp[n][W];
 
     opcount++;
-    if (weight[n - 1] <= W)
+    if (weight[n - 1] > W)
         return dp[n][W] = max(knapsackMemo(n - 1, W), profit[n - 1] + knapsackMemo(n - 1, W - weight[n - 1]));
     else
         return dp[n][W] = knapsackMemo(n - 1, W);
