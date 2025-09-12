@@ -1,76 +1,80 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-int n, opcount, paths[100][100];
+int opcount=0;
+int path[100][100];
+int n;
+ 
+void warshall(int adj[n][n],int n){
+    opcount=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            path[i][j]=adj[i][j];
+        }
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            for(int k=0;k<n;k++){
+                opcount++;
+                path[j][k]=path[j][k] || path[j][i] && path[i][k];
+            }
+        }
+         printf("\nMatrix after including node %d as intermediate:\n", i);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            printf("%d\t",path[i][j]);
+             
+        }
+        printf("\n");
+       
+    }
+    }
+}
 
-int warshall(int adjMat[n][n], int n)
-{
-    opcount = 0;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            paths[i][j] = adjMat[i][j];
-    for (int k = 0; k < n; k++)
-        for (int i = 0; i < n; i++)
-            if (paths[i][k])
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    opcount++;
-                    paths[i][j] = paths[i][j] || (paths[i][k] && paths[k][j]);
+void tester(){
+    printf("Enter the number of nodes\n");
+    scanf("%d",&n);
+    int adj[n][n];
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&adj[i][j]);
+        }
+    }
+            warshall(adj,n);
+            printf("\n Final transitive closure matrix\n");
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    printf("%d\t",path[i][j]);
+                    
+                }
+                printf("\n");
+            }
+        
+    }
+   void plotter(){
+    FILE *fp1;
+    fp1 = fopen("warshall.txt", "w");
+    int adj[100][100];
+    for(int k = 1; k <= 10; k++){
+        n = k;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                if(i != j){
+                    adj[i][j] = 1; 
+                } else {
+                    adj[i][j] = 0;
                 }
             }
-}
-
-void tester()
-{
-    printf("Enter the number of nodes: ");
-    scanf("%d", &n);
-    int adjMat[n][n];
-    printf("Enter the adjacency matrix: \n");
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            scanf("%d", &adjMat[i][j]);
-    warshall(adjMat, n);
-    printf("Transitive closure matrix:\n");
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            printf("%d\t", paths[i][j]);
-        printf("\n");
+        }
+        warshall(adj, k);
+        fprintf(fp1, "%d %d\n", k, opcount);
     }
+    fclose(fp1); 
 }
 
-void plotter()
-{
-    FILE *f1 = fopen("warshallbest.txt", "w");
-    FILE *f2 = fopen("warshallworst.txt", "w");
-    for (int k = 1; k <= 10; k++)
-    {
-        n = k;
-        int adjMat[n][n];
-        for (int j = 0; j < n; j++)
-            for (int i = 0; i < n; i++)
-                if (i != j)
-                    adjMat[i][j] = 1;
-                else
-                    adjMat[i][j] = 0;
-        warshall(adjMat, n);
-        fprintf(f2, "%d\t%d\n", n, opcount);
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                adjMat[i][j] = 0;
-        for (int i = 0; i < n - 1; i++)
-            adjMat[i][i + 1] = 1;
-        adjMat[n - 1][0] = 1;
-        warshall(adjMat, n);
-        fprintf(f1, "%d\t%d\n", n, opcount);
-    }
-    fclose(f1);
-    fclose(f2);
-}
 
-void main()
-{
+
+void main(){
     int ch;
     printf("Enter\n1.Tester\n2.Plotter\n");
     scanf("%d", &ch);
@@ -84,5 +88,5 @@ void main()
         break;
     default:
         printf("Invalid choice!! ");
-    }
+}
 }
